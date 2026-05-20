@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>파일 뷰어</title>
+  <style>
+    body { font-family: monospace; padding: 20px; background: #1e1e1e; color: #d4d4d4; }
+    #content { white-space: pre-wrap; word-break: break-all; line-height: 1.6; }
+    #search { margin-bottom: 10px; padding: 6px; width: 300px; }
+  </style>
+</head>
+<body>
+  <input id="search" type="text" placeholder="검색어 입력..." oninput="highlight(this.value)">
+  <div id="content">불러오는 중...</div>
+
+  <script>
+    // ↓ 여기에 Raw URL 입력
+    const RAW_URL = "https://raw.githubusercontent.com/유저명/레포명/main/파일명.txt";
+    let originalText = "";
+
+    fetch(RAW_URL)
+      .then(res => res.text())
+      .then(text => {
+        originalText = text;
+        document.getElementById("content").textContent = text;
+      });
+
+    function highlight(keyword) {
+      if (!keyword) {
+        document.getElementById("content").textContent = originalText;
+        return;
+      }
+      const escaped = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const html = originalText.replace(new RegExp(escaped, 'gi'),
+        match => `<mark>${match}</mark>`);
+      document.getElementById("content").innerHTML = html;
+    }
+  </script>
+</body>
+</html>
