@@ -19,11 +19,17 @@
     let originalText = "";
 
     fetch(RAW_URL)
-      .then(res => res.text())
-      .then(text => {
-        originalText = text;
-        document.getElementById("content").textContent = text;
-      });
+  .then(res => {
+    console.log("status:", res.status);
+    return res.text();
+  })
+  .then(text => {
+    console.log("text length:", text.length);
+    console.log("text preview:", text.substring(0, 100));
+    originalText = text;
+    document.getElementById("content").textContent = text;
+  })
+  .catch(err => console.error("fetch 에러:", err));
 
     function highlight(keyword) {
       if (!keyword) {
