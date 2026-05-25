@@ -2,6 +2,7 @@
 <html lang="ko">
 <head>
   <link rel="manifest" href="manifest.json">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="소설 뷰어">
@@ -9,31 +10,39 @@
   <title>파일 뷰어</title>
   <style>
     body { font-family: monospace; padding: 20px; background: #1e1e1e; color: #d4d4d4; }
-    #content { white-space: pre-wrap; word-break: break-all; line-height: 1.6; }
+    #content { white-space: pre-wrap; word-break: break-all; line-height: 1.6; font-size: 16px; }
     #search { margin-bottom: 10px; padding: 6px; width: 300px; }
+    .btn { padding: 6px 12px; margin-right: 6px; background: #333; color: #d4d4d4; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; }
   </style>
 </head>
 <body>
+  <button class="btn" onclick="changeSize(2)">A+</button>
+  <button class="btn" onclick="changeSize(-2)">A-</button>
+  <br><br>
   <input id="search" type="text" placeholder="검색어 입력..." oninput="highlight(this.value)">
   <div id="content">불러오는 중...</div>
-
   <script>
-    // ↓ 여기에 Raw URL 입력
     const RAW_URL = "https://raw.githubusercontent.com/KimEunkyu1030/YUMMY/main/novel.txt";
     let originalText = "";
+    let fontSize = 16;
 
     fetch(RAW_URL)
-  .then(res => {
-    console.log("status:", res.status);
-    return res.text();
-  })
-  .then(text => {
-    console.log("text length:", text.length);
-    console.log("text preview:", text.substring(0, 100));
-    originalText = text;
-    document.getElementById("content").textContent = text;
-  })
-  .catch(err => console.error("fetch 에러:", err));
+      .then(res => {
+        console.log("status:", res.status);
+        return res.text();
+      })
+      .then(text => {
+        console.log("text length:", text.length);
+        console.log("text preview:", text.substring(0, 100));
+        originalText = text;
+        document.getElementById("content").textContent = text;
+      })
+      .catch(err => console.error("fetch 에러:", err));
+
+    function changeSize(delta) {
+      fontSize += delta;
+      document.getElementById("content").style.fontSize = fontSize + "px";
+    }
 
     function highlight(keyword) {
       if (!keyword) {
@@ -47,9 +56,9 @@
     }
   </script>
   <script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./sw.js');
-  }
-</script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js');
+    }
+  </script>
 </body>
 </html>
